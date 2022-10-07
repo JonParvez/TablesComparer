@@ -2,12 +2,8 @@
 
 namespace TablesComparer.Repository
 {
-	public class Repository : BaseRepository, IRepository
+	public class DataRepository : BaseRepository, IRepository
 	{
-		public Repository(IConfiguration configuration) : base(configuration)
-		{
-		}
-
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetAddedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			try

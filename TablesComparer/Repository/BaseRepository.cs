@@ -8,9 +8,13 @@ namespace TablesComparer.Repository
 	{
 		private readonly IConfiguration _configuration;
 
-		protected BaseRepository(IConfiguration configuration)
+		protected BaseRepository()
 		{
-			_configuration = configuration;
+			var builder = new ConfigurationBuilder()
+						.SetBasePath(Directory.GetCurrentDirectory())
+						.AddJsonFile("appsettings.json");
+
+			_configuration = builder.Build();
 		}
 
 		protected IDbConnection CreateConnection()
@@ -30,14 +34,14 @@ namespace TablesComparer.Repository
 					using var sqlCommand = new SqlCommand(query, connection);
 					using var dataReader = await sqlCommand.ExecuteReaderAsync();
 					records = new();
-					int index = 0;
-					while (dataReader.Read())
+					while (await dataReader.ReadAsync())
 					{
-						records.Add(new Dictionary<string, dynamic>()
+						var record = new Dictionary<string, dynamic>();
+						for (int index = 0; index < dataReader.FieldCount; index++)
 						{
-							{ dataReader.GetName(index), dataReader.GetValue(index) }
-						});
-						index++;
+							record.Add(dataReader.GetName(index), dataReader.GetValue(index));
+						}
+						records.Add(record);
 					}
 					connection.Close();
 					return records;
