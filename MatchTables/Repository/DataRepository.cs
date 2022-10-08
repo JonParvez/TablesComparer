@@ -122,6 +122,11 @@ namespace TablesComparer.Repository
 			return hasColumn is not null and true;
 		}
 
+		/// <summary>
+		/// Check table exists or not
+		/// </summary>
+		/// <param name="tableName">Table name</param>
+		/// <returns>Return boolean result</returns>
 		public async Task<bool> TableExistsAsync(string tableName)
 		{
 			string commandText = $@"SELECT CASE 

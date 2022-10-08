@@ -134,6 +134,13 @@ namespace TablesComparer.Service
 			}
 		}
 
+		/// <summary>
+		/// Validate source table exists in database
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <returns></returns>
+		/// <exception cref="InvalidDataException">Invalid Data Exception</exception>
 		private async Task ValidateTableNameAsync(string sourceTable1, string sourceTable2)
 		{
 			if (!await _repository.TableExistsAsync(sourceTable1))
