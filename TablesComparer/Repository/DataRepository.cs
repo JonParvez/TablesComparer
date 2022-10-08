@@ -40,9 +40,9 @@ namespace TablesComparer.Repository
 			return await GetRecordsAsync(commandText);
 		}
 
-		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetSpecificRecordsAsync(string sourceTable, string primaryKeyName, List<string> primaryKeys)
+		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetSpecificRecordsAsync(string sourceTable, string primaryKeyName, IEnumerable<string> primaryKeys)
 		{
-			string commandText = $@"(SELECT {sourceTable}.* FROM {sourceTable}
+			string commandText = $@"SELECT {sourceTable}.* FROM {sourceTable}
 									WHERE {sourceTable}.{primaryKeyName} IN ({string.Join(",", primaryKeys)})";
 			return await GetRecordsAsync(commandText);
 		}

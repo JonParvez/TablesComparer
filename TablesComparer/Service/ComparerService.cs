@@ -1,5 +1,5 @@
-﻿using System.Text;
-using TablesComparer.Repository;
+﻿using TablesComparer.Repository;
+using TablesComparer.Utility;
 
 namespace TablesComparer.Service
 {
@@ -14,13 +14,22 @@ namespace TablesComparer.Service
 		public async Task<string> GetAddedRecordsAsStringAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			var records = await _repository.GetAddedRecordsAsync(sourceTable1, sourceTable2, primaryKey);
-			StringBuilder stringBuilder = new();
-			foreach (var record in records)
-			{
-				//stringBuilder.Append($"   •  {record[primaryKey]} ({record.ElementAt(1)} {record.ElementAt(1)}) \n");
-				stringBuilder.Append($"   *  {record[primaryKey]} ({record.ElementAt(1).Value}) \n");
-			}
-			return stringBuilder.ToString();
+			return records.ConvertAddedOrRemovedRecordsToStringValue(primaryKey);
+		}
+
+		public async Task<string> GetDeletedRecordsAsStringAsync(string sourceTable1, string sourceTable2, string primaryKey)
+		{
+			var records = await _repository.GetRemovedRecordsAsync(sourceTable1, sourceTable2, primaryKey);
+
+			return records.ConvertAddedOrRemovedRecordsToStringValue(primaryKey);
+		}
+
+		public async Task<string> GetModifiedRecordsAsStringAsync(string sourceTable1, string sourceTable2, string primaryKey)
+		{
+			var oldRecordValues = await _repository.GetModifiedRecordsAsync(sourceTable1, sourceTable2, primaryKey);
+			var newRecordValues = await _repository.GetSpecificRecordsAsync(sourceTable2, primaryKey, oldRecordValues.Select(m => (string)m[primaryKey]));
+
+			return oldRecordValues.ConvertModifiedRecordsToStringValue(newRecordValues, primaryKey);
 		}
 	}
 }
