@@ -29,7 +29,7 @@ To clone the repowitory to your local machine run this command. **(You must have
       * It will insert around 100 records in those two tables
 
 ## After Running the Application
-There are three ways to provide the required input in the application:
+There are **three** ways to provide the required input in the application, You can follow any way instructed below:
 
 **1. Run the application and there will be reader in the console for the inputs**
 
