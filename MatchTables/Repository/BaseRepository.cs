@@ -17,37 +17,69 @@ namespace TablesComparer.Repository
 			_configuration = builder.Build();
 		}
 
-		protected async Task<IEnumerable<Dictionary<string, dynamic>>> GetRecordsAsync(string query)
+		protected async Task<IEnumerable<Dictionary<string, dynamic>>> GetRecordsAsync(string commandText)
 		{
 			List<Dictionary<string, dynamic>> records = new();
-			SqlConnection? connection = null;
+			SqlCommand? command = null;
 			try
 			{
-				using (connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
+				command = CreateDbCommand();
+				command.CommandText = commandText;
+				using var dataReader = await command.ExecuteReaderAsync();
+				while (await dataReader.ReadAsync())
 				{
-					connection.Open();
-					using var sqlCommand = new SqlCommand(query, connection);
-					using var dataReader = await sqlCommand.ExecuteReaderAsync();
-					while (await dataReader.ReadAsync())
+					var record = new Dictionary<string, dynamic>();
+					for (int index = 0; index < dataReader.FieldCount; index++)
 					{
-						var record = new Dictionary<string, dynamic>();
-						for (int index = 0; index < dataReader.FieldCount; index++)
-						{
-							record.Add(dataReader.GetName(index), dataReader.GetValue(index));
-						}
-						records.Add(record);
+						record.Add(dataReader.GetName(index), dataReader.GetValue(index));
 					}
-					connection.Close();
-					return records;
+					records.Add(record);
 				}
+				return records;
 			}
 			catch (Exception)
 			{
-				if (connection != null && connection.State == ConnectionState.Open)
-				{
-					connection.Close();
-				}
 				throw;
+			}
+			finally
+			{
+				CloseConnectionAsync(command);
+			}
+		}
+
+		protected async Task<T?> GetScalarAsync<T>(string commandText)
+		{
+			SqlCommand? command = null;
+			try
+			{
+				command = CreateDbCommand();
+				command.CommandText = commandText;
+				var result = (T?)await command.ExecuteScalarAsync();
+				return result;
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			finally
+			{
+				CloseConnectionAsync(command);
+			}
+		}
+
+		private SqlCommand CreateDbCommand()
+		{
+			using var sqlCommand = new SqlCommand();
+			sqlCommand.Connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
+			sqlCommand.Connection.Open();
+			return sqlCommand;
+		}
+
+		private static void CloseConnectionAsync(SqlCommand? command)
+		{
+			if (command?.Connection != null && command.Connection.State == ConnectionState.Open)
+			{
+				command.Connection.Close();
 			}
 		}
 	}

@@ -42,5 +42,31 @@ namespace TablesComparer.Service
 
 			return oldRecordValues.ConvertModifiedRecordsToStringValue(newRecordValues, primaryKey);
 		}
+
+		public async Task ValidateInputsAsync(string sourceTable1, string sourceTable2, string primaryKey)
+		{
+			await ValidateIdenticalAsync(sourceTable1, sourceTable2);
+			await ValidateTablePrimaryKeyAsync(sourceTable1, sourceTable2, primaryKey);
+		}
+
+		private async Task ValidateIdenticalAsync(string sourceTable1, string sourceTable2)
+		{
+			if (!await _repository.CheckIdenticalAsync(sourceTable2, sourceTable1))
+			{
+				throw new Exception("Source tables are not identical!");
+			}
+		}
+
+		private async Task ValidateTablePrimaryKeyAsync(string sourceTable1, string sourceTable2, string primaryKey)
+		{
+			if (!await _repository.HasColumnAsync(sourceTable1, primaryKey))
+			{
+				throw new Exception("Primary key is missing in SourceTable1!");
+			}
+			if (!await _repository.HasColumnAsync(sourceTable2, primaryKey))
+			{
+				throw new Exception("Primary key is missing in SourceTable2!");
+			}
+		}
 	}
 }

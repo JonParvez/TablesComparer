@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace TablesComparer.Repository
+﻿namespace TablesComparer.Repository
 {
 	public class DataRepository : BaseRepository, IRepository
 	{
@@ -47,6 +45,38 @@ namespace TablesComparer.Repository
 			return await GetRecordsAsync(commandText);
 		}
 
+		public async Task<bool> CheckIdenticalAsync(string sourceTable1, string sourceTable2)
+		{
+			string commandText = $@"SELECT 
+										CASE 
+											WHEN EXISTS 
+											(
+												SELECT name, system_type_id, user_type_id,max_length, precision,scale, is_nullable, is_identity
+												FROM sys.columns WHERE object_id = OBJECT_ID('{sourceTable1}')
+												EXCEPT
+												SELECT name, system_type_id, user_type_id,max_length, precision,scale, is_nullable, is_identity
+												FROM sys.columns WHERE object_id = OBJECT_ID('{sourceTable2}')
+											)
+											THEN CAST(0 AS BIT)
+											ELSE CAST(1 AS BIT) END";
+
+			var isIdentical = await GetScalarAsync<bool?>(commandText);
+			return isIdentical is not null and true;
+		}
+
 		
+		public async Task<bool> HasColumnAsync(string tableName, string columnName)
+		{
+			string commandText = $@"SELECT CASE 
+										WHEN EXISTS
+										(
+											SELECT Name FROM sys.columns
+											WHERE Name = '{columnName}' AND Object_ID = Object_ID('{tableName}')
+										)
+										THEN CAST(1 AS BIT)
+										ELSE CAST(0 AS BIT) END";
+			var hasColumn = await GetScalarAsync<bool?>(commandText);
+			return hasColumn is not null and true;
+		}
 	}
 }

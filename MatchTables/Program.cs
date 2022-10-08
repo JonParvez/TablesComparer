@@ -15,15 +15,16 @@ try
 
 	#endregion
 
-	#region Console Input 
+	#region Input 
+
 	ProcessInput(args);
+
 	#endregion
 
 	#region Validation
-	if (string.IsNullOrWhiteSpace(sourceTable1) || string.IsNullOrWhiteSpace(sourceTable2) || string.IsNullOrWhiteSpace(primaryKey))
-	{
-		throw new Exception("Input arguments are required!");
-	}
+
+	await comparerService.ValidateInputsAsync(sourceTable1, sourceTable2, primaryKey);
+
 	#endregion
 
 	#region Operational Functionalities
@@ -48,9 +49,10 @@ try
 }
 catch (Exception ex)
 {
-	Console.WriteLine(ex.Message + "\n\nTry Again ... ");
+	Console.WriteLine(ex.Message + "\nTry Again ... ");
 }
-Console.ReadLine();
+Console.WriteLine("Insert any key to close the application ...");
+Console.ReadKey();
 
 #region Private Methods
 
@@ -75,7 +77,6 @@ void ProcessInput(string[] args)
 		sourceTable2 = Console.ReadLine();
 		Console.Write($"{InputConstants.PRIMARY_KEY} : ");
 		primaryKey = Console.ReadLine();
-
 		Console.WriteLine("\n");
 	}
 }
