@@ -5,8 +5,9 @@ Necessary instructions are given below for setup, build and run of this applicai
 * Compare two identical tables of it's schema, added/delete/changed records and any other changes made.
 
 ## Cloning
-**To clone the repowitory to your local machine run this command. (You must have git installed in your local machine)**
+To clone the repowitory to your local machine run this command. **(You must have git installed in your local machine)**
 
+```git clone https://github.com/JonParvez/TablesComparer.git```
 
 ## Basic Machine Requirements 
 * [ASP.NET 6](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
