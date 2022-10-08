@@ -18,7 +18,7 @@ To clone the repowitory to your local machine run this command. **(You must have
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Data Source=DESKTOP-0C60KR7\\PARVEZ;Initial Catalog=TestDB;Integrated Security=SSPI;"
+    "DefaultConnection": "Data Source=localhost;Initial Catalog=MatchTableDB;Integrated Security=SSPI;"
   }
 }
 ```
