@@ -6,7 +6,7 @@ namespace MatchTables_Test
 	{
 		public const string sourceTable1Name = "SourceTable1";
 		public const string sourceTable2Name = "SourceTable2";
-		public const string primaryKey = "socialsecuritynumber";
+		public const string primaryKey = "SocialSecurityNumber";
 		public List<Dictionary<string, dynamic>> MockSourceRecords { get; } =
 			new()
 			{

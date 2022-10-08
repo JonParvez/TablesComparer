@@ -77,8 +77,9 @@ namespace TablesComparer.Service
 		public async Task ValidateInputsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			ValidateInputValuesAsync(sourceTable1, sourceTable2, primaryKey);
-			await ValidateIdenticalAsync(sourceTable1, sourceTable2);
+			await ValidateTableNameAsync(sourceTable1, sourceTable2);
 			await ValidateTablePrimaryKeyAsync(sourceTable1, sourceTable2, primaryKey);
+			await ValidateIdenticalAsync(sourceTable1, sourceTable2);
 		}
 
 		/// <summary>
@@ -125,11 +126,23 @@ namespace TablesComparer.Service
 		{
 			if (!await _repository.HasColumnAsync(sourceTable1, primaryKey))
 			{
-				throw new InvalidDataException("Primary key is missing in SourceTable1!");
+				throw new InvalidDataException($"Primary key is missing in {sourceTable1}!");
 			}
 			if (!await _repository.HasColumnAsync(sourceTable2, primaryKey))
 			{
-				throw new InvalidDataException("Primary key is missing in SourceTable2!");
+				throw new InvalidDataException($"Primary key is missing in {sourceTable2}!");
+			}
+		}
+
+		private async Task ValidateTableNameAsync(string sourceTable1, string sourceTable2)
+		{
+			if (!await _repository.TableExistsAsync(sourceTable1))
+			{
+				throw new InvalidDataException($"Table '{sourceTable1}' does not exist in database!");
+			}
+			if (!await _repository.TableExistsAsync(sourceTable2))
+			{
+				throw new InvalidDataException($"Table '{sourceTable2}' does not exist in database!");
 			}
 		}
 	}

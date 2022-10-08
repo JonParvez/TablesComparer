@@ -126,7 +126,8 @@ namespace MatchTables_Test
 		{
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
-			mockRepository.CheckIdenticalAsync(sourceTable1Name, sourceTable2Name).Returns(true);
+			mockRepository.TableExistsAsync(sourceTable1Name).Returns(true);
+			mockRepository.TableExistsAsync(sourceTable2Name).Returns(true);
 			mockRepository.HasColumnAsync(sourceTable1Name, primaryKey).Returns(false);
 			var comparerService = new ComparerService(mockRepository);
 
@@ -143,6 +144,10 @@ namespace MatchTables_Test
 		{
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
+			mockRepository.TableExistsAsync(sourceTable1Name).Returns(true);
+			mockRepository.TableExistsAsync(sourceTable2Name).Returns(true);
+			mockRepository.HasColumnAsync(sourceTable1Name, primaryKey).Returns(true);
+			mockRepository.HasColumnAsync(sourceTable2Name, primaryKey).Returns(true);
 			mockRepository.CheckIdenticalAsync(sourceTable1Name, sourceTable2Name).Returns(false);
 			var comparerService = new ComparerService(mockRepository);
 

@@ -121,5 +121,18 @@ namespace TablesComparer.Repository
 			var hasColumn = await _baseRepository.GetScalarAsync<bool?>(commandText);
 			return hasColumn is not null and true;
 		}
+
+		public async Task<bool> TableExistsAsync(string tableName)
+		{
+			string commandText = $@"SELECT CASE 
+										WHEN EXISTS
+										(
+											SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{tableName}'
+										)
+										THEN CAST(1 AS BIT)
+										ELSE CAST(0 AS BIT) END";
+			var exists = await _baseRepository.GetScalarAsync<bool?>(commandText);
+			return exists is not null and true;
+		}
 	}
 }
