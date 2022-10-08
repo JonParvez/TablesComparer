@@ -17,14 +17,9 @@ namespace TablesComparer.Repository
 			_configuration = builder.Build();
 		}
 
-		protected IDbConnection CreateConnection()
-		{
-			return new SqlConnection(_configuration.GetConnectionString("DefaultConnection"));
-		}
-
 		protected async Task<IEnumerable<Dictionary<string, dynamic>>> GetRecordsAsync(string query)
 		{
-			List<Dictionary<string, dynamic>> records;
+			List<Dictionary<string, dynamic>> records = new();
 			SqlConnection? connection = null;
 			try
 			{
@@ -33,7 +28,6 @@ namespace TablesComparer.Repository
 					connection.Open();
 					using var sqlCommand = new SqlCommand(query, connection);
 					using var dataReader = await sqlCommand.ExecuteReaderAsync();
-					records = new();
 					while (await dataReader.ReadAsync())
 					{
 						var record = new Dictionary<string, dynamic>();
