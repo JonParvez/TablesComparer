@@ -3,6 +3,9 @@ using TablesComparer.Utility.Extensions;
 
 namespace TablesComparer.Service
 {
+	/// <summary>
+	/// Table matcher service
+	/// </summary>
 	public class ComparerService : IComparerService
 	{
 		private readonly IDataRepository _repository;
@@ -11,6 +14,13 @@ namespace TablesComparer.Service
 			_repository = repository;
 		}
 
+		/// <summary>
+		/// Get added records as string formatted
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns>Return string formatted added records result</returns>
 		public async Task<string> GetAddedRecordsAsStringAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			var records = await _repository.GetAddedRecordsAsync(sourceTable1, sourceTable2, primaryKey);
@@ -21,6 +31,13 @@ namespace TablesComparer.Service
 			return records.ConvertAddedOrRemovedRecordsToStringValue(primaryKey);
 		}
 
+		/// <summary>
+		/// Get deleted records as string formatted
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns>Return string formatted deleted records result</returns>
 		public async Task<string> GetDeletedRecordsAsStringAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			var records = await _repository.GetRemovedRecordsAsync(sourceTable1, sourceTable2, primaryKey);
@@ -31,6 +48,13 @@ namespace TablesComparer.Service
 			return records.ConvertAddedOrRemovedRecordsToStringValue(primaryKey);
 		}
 
+		/// <summary>
+		/// Get modified records as string formatted
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns>Return string formatted modified records result</returns>
 		public async Task<string> GetModifiedRecordsAsStringAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			var oldRecordValues = await _repository.GetModifiedRecordsAsync(sourceTable1, sourceTable2, primaryKey);
@@ -43,6 +67,13 @@ namespace TablesComparer.Service
 			return oldRecordValues.ConvertModifiedRecordsToStringValue(newRecordValues, primaryKey);
 		}
 
+		/// <summary>
+		/// Validate Inputs 
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns></returns>
 		public async Task ValidateInputsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			ValidateInputValuesAsync(sourceTable1, sourceTable2, primaryKey);
@@ -50,6 +81,13 @@ namespace TablesComparer.Service
 			await ValidateTablePrimaryKeyAsync(sourceTable1, sourceTable2, primaryKey);
 		}
 
+		/// <summary>
+		/// Validate input parameter values 
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <exception cref="ArgumentException">Argument Exception</exception>
 		private static void ValidateInputValuesAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			if(string.IsNullOrWhiteSpace(sourceTable1))
@@ -60,6 +98,13 @@ namespace TablesComparer.Service
 				throw new ArgumentException("PrimaryKey is required!");
 		}
 
+		/// <summary>
+		/// Validate two tables identicality
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <returns></returns>
+		/// <exception cref="InvalidDataException">Invalid Data Exception</exception>
 		private async Task ValidateIdenticalAsync(string sourceTable1, string sourceTable2)
 		{
 			if (!await _repository.CheckIdenticalAsync(sourceTable1, sourceTable2))
@@ -68,6 +113,14 @@ namespace TablesComparer.Service
 			}
 		}
 
+		/// <summary>
+		/// Validate two tables' primary key
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns></returns>
+		/// <exception cref="InvalidDataException">Invalid Data Exception</exception>
 		private async Task ValidateTablePrimaryKeyAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			if (!await _repository.HasColumnAsync(sourceTable1, primaryKey))

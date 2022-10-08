@@ -2,6 +2,9 @@
 
 namespace TablesComparer.Repository
 {
+	/// <summary>
+	/// Data repository for specefic query generation and execution
+	/// </summary>
 	public class DataRepository : IDataRepository
 	{
 		private readonly IBaseRepository _baseRepository;
@@ -9,22 +12,30 @@ namespace TablesComparer.Repository
 		{
 			_baseRepository = baseRepository;
 		}
+
+		/// <summary>
+		/// Get added records
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns>Return added records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetAddedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
-			try
-			{
-				string commandText = $@"SELECT {sourceTable2}.* FROM {sourceTable2}
+			string commandText = $@"SELECT {sourceTable2}.* FROM {sourceTable2}
 										LEFT JOIN {sourceTable1} 
 										ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
 										where {sourceTable1}.{primaryKey} IS NULL";
-				return await _baseRepository.GetRecordsAsync(commandText);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
+			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
+		/// <summary>
+		/// Get deleted records
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns>Return deleted records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetRemovedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			string commandText = $@"SELECT {sourceTable1}.* FROM {sourceTable1}
@@ -34,6 +45,13 @@ namespace TablesComparer.Repository
 			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
+		/// <summary>
+		/// Get modified records
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <param name="primaryKey">Primary Key</param>
+		/// <returns>Return modified records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetModifiedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			string commandText = $@"(SELECT {sourceTable1}.* FROM {sourceTable1}
@@ -45,6 +63,13 @@ namespace TablesComparer.Repository
 			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
+		/// <summary>
+		/// Get specific records of selected primary keys
+		/// </summary>
+		/// <param name="sourceTable">Source Table</param>
+		/// <param name="primaryKeyName">Primary Key Name</param>
+		/// <param name="primaryKeys">Primary Key Values</param>
+		/// <returns>Return selected records</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetSpecificRecordsAsync(string sourceTable, string primaryKeyName, IEnumerable<string> primaryKeys)
 		{
 			string commandText = $@"SELECT {sourceTable}.* FROM {sourceTable}
@@ -52,6 +77,12 @@ namespace TablesComparer.Repository
 			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
+		/// <summary>
+		/// Check identicality of two tables
+		/// </summary>
+		/// <param name="sourceTable1">Source Table1</param>
+		/// <param name="sourceTable2">Source Table2</param>
+		/// <returns>Return boolean value of identicality</returns>
 		public async Task<bool> CheckIdenticalAsync(string sourceTable1, string sourceTable2)
 		{
 			string commandText = $@"SELECT 
@@ -71,7 +102,12 @@ namespace TablesComparer.Repository
 			return isIdentical is not null and true;
 		}
 
-		
+		/// <summary>
+		/// Check if table contains provided column
+		/// </summary>
+		/// <param name="tableName">Table Name</param>
+		/// <param name="columnName">Column Name</param>
+		/// <returns>Return boolean result</returns>
 		public async Task<bool> HasColumnAsync(string tableName, string columnName)
 		{
 			string commandText = $@"SELECT CASE 

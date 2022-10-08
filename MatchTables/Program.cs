@@ -21,7 +21,7 @@ try
 
 	#endregion
 
-	#region Validation
+	#region Input and Table Schema Validation
 
 	await comparerService.ValidateInputsAsync(sourceTable1, sourceTable2, primaryKey);
 
@@ -40,7 +40,7 @@ try
 
 	#endregion
 
-	#region Disposal
+	#region Service Disposal
 	if (serviceProvider is IDisposable disposable)
 	{
 		disposable.Dispose();
@@ -58,6 +58,7 @@ Console.ReadKey();
 
 void ProcessInput(string[] args)
 {
+	//If parameters are passed by arguments
 	if (args != null && args.Length > 5)
 	{
 		Console.WriteLine("Reading from console arguments ... ");
@@ -68,6 +69,7 @@ void ProcessInput(string[] args)
 		if (args[4] == InputConstants.PRIMARY_KEY)
 			primaryKey = args[5];
 	}
+	//If parameters are inputted by console reader
 	else
 	{
 		Console.WriteLine("Reading from console reader ... ");
