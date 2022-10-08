@@ -1,5 +1,5 @@
 # MatchTables
-Necessary instructions are given below for setup, build and run of this applicaiton...
+Necessary instructions are given below for setup, build and execution of this applicaiton...
 
 ## Purpose of This Project
 * Compare two identical tables of it's schema, added/delete/changed records and any other changes made.
