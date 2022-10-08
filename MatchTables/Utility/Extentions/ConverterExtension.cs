@@ -34,7 +34,7 @@ namespace TablesComparer.Utility.Extensions
 			StringBuilder stringBuilder = new();
 			foreach (var oldRecord in oldRecords)
 			{
-				var newRecord = newRecords.First(m => m["Id"] == oldRecord["Id"]);
+				var newRecord = newRecords.First(m => m[primaryKey] == oldRecord[primaryKey]);
 				foreach (var item in oldRecord)
 				{
 					if (item.Key != primaryKey && oldRecord[item.Key] != newRecord[item.Key])

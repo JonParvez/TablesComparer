@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MatchTables": {
+      "commandName": "Project",
+      "commandLineArgs": "-TableName1 SourceTable1 -TableName2 SourceTable2 -Primarykey SocialSecurityNumber"
+    }
+  }
+}

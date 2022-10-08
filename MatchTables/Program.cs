@@ -49,7 +49,9 @@ try
 }
 catch (Exception ex)
 {
+	Console.ForegroundColor = ConsoleColor.Red;
 	Console.WriteLine(ex.Message + "\nTry Again ... ");
+	Console.ForegroundColor = ConsoleColor.White;
 }
 Console.WriteLine("Insert any key to close the application ...");
 Console.ReadKey();
