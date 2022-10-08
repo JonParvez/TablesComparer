@@ -1,8 +1,8 @@
 ﻿using System.Text;
 
-namespace TablesComparer.Utility
+namespace TablesComparer.Utility.Extensions
 {
-	public static class Converter
+	public static class ConverterExtension
 	{
 		public static string ConvertAddedOrRemovedRecordsToStringValue(this IEnumerable<Dictionary<string, dynamic>> records, string primaryKey)
 		{

@@ -1,7 +1,14 @@
-﻿namespace TablesComparer.Repository
+﻿using MatchTables.Repository;
+
+namespace TablesComparer.Repository
 {
-	public class DataRepository : BaseRepository, IRepository
+	public class DataRepository : IDataRepository
 	{
+		private readonly IBaseRepository _baseRepository;
+		public DataRepository(IBaseRepository baseRepository)
+		{
+			_baseRepository = baseRepository;
+		}
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetAddedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			try
@@ -10,7 +17,7 @@
 										LEFT JOIN {sourceTable1} 
 										ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
 										where {sourceTable1}.{primaryKey} IS NULL";
-				return await GetRecordsAsync(commandText);
+				return await _baseRepository.GetRecordsAsync(commandText);
 			}
 			catch (Exception)
 			{
@@ -24,7 +31,7 @@
 									LEFT JOIN {sourceTable2} 
 									ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
 									WHERE {sourceTable2}.{primaryKey} IS NULL";
-			return await GetRecordsAsync(commandText);
+			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetModifiedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
@@ -35,14 +42,14 @@
 									(SELECT {sourceTable2}.* FROM {sourceTable1}
 									INNER JOIN {sourceTable2}
 									ON ({sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}))";
-			return await GetRecordsAsync(commandText);
+			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetSpecificRecordsAsync(string sourceTable, string primaryKeyName, IEnumerable<string> primaryKeys)
 		{
 			string commandText = $@"SELECT {sourceTable}.* FROM {sourceTable}
 									WHERE {sourceTable}.{primaryKeyName} IN ({string.Join(",", primaryKeys)})";
-			return await GetRecordsAsync(commandText);
+			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
 		public async Task<bool> CheckIdenticalAsync(string sourceTable1, string sourceTable2)
@@ -60,7 +67,7 @@
 											THEN CAST(0 AS BIT)
 											ELSE CAST(1 AS BIT) END";
 
-			var isIdentical = await GetScalarAsync<bool?>(commandText);
+			var isIdentical = await _baseRepository.GetScalarAsync<bool?>(commandText);
 			return isIdentical is not null and true;
 		}
 
@@ -75,7 +82,7 @@
 										)
 										THEN CAST(1 AS BIT)
 										ELSE CAST(0 AS BIT) END";
-			var hasColumn = await GetScalarAsync<bool?>(commandText);
+			var hasColumn = await _baseRepository.GetScalarAsync<bool?>(commandText);
 			return hasColumn is not null and true;
 		}
 	}

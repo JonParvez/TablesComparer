@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MatchTables.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using TablesComparer.Repository;
 using TablesComparer.Service;
@@ -10,9 +10,9 @@ namespace TablesComparer.Utility
 		public static ServiceProvider ConfigureServices()
 		{
 			var serviceCollection = new ServiceCollection();
-			//serviceCollection.AddSingleton<IConfiguration>();
 			serviceCollection.AddScoped<IComparerService, ComparerService>();
-			serviceCollection.AddScoped<IRepository, DataRepository>();
+			serviceCollection.AddScoped<IDataRepository, DataRepository>();
+			serviceCollection.AddScoped<IBaseRepository, BaseRepository>();
 			return serviceCollection.BuildServiceProvider();
 		}
 	}

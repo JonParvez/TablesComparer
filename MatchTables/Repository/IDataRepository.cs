@@ -1,6 +1,6 @@
 ﻿namespace TablesComparer.Repository
 {
-	public interface IRepository
+	public interface IDataRepository
 	{
 		Task<IEnumerable<Dictionary<string, dynamic>>> GetAddedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey);
 		Task<IEnumerable<Dictionary<string, dynamic>>> GetRemovedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey);

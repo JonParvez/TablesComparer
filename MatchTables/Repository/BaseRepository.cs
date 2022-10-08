@@ -1,14 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using MatchTables.Repository;
+using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace TablesComparer.Repository
 {
-	public abstract class BaseRepository
+	public class BaseRepository : IBaseRepository
 	{
 		private readonly IConfiguration _configuration;
 
-		protected BaseRepository()
+		public BaseRepository()
 		{
 			var builder = new ConfigurationBuilder()
 						.SetBasePath(Directory.GetCurrentDirectory())
@@ -17,7 +18,7 @@ namespace TablesComparer.Repository
 			_configuration = builder.Build();
 		}
 
-		protected async Task<IEnumerable<Dictionary<string, dynamic>>> GetRecordsAsync(string commandText)
+		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetRecordsAsync(string commandText)
 		{
 			List<Dictionary<string, dynamic>> records = new();
 			SqlCommand? command = null;
@@ -47,7 +48,7 @@ namespace TablesComparer.Repository
 			}
 		}
 
-		protected async Task<T?> GetScalarAsync<T>(string commandText)
+		public async Task<T?> GetScalarAsync<T>(string commandText)
 		{
 			SqlCommand? command = null;
 			try
