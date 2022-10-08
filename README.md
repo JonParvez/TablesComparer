@@ -53,5 +53,9 @@ To setup the arguments in visual studio:
 
 ![image](https://user-images.githubusercontent.com/56506587/194725870-0ba9b45e-5b3b-41f4-882c-23f6bdb95f5b.png)
 
+## Sample Output
+
+![image](https://user-images.githubusercontent.com/56506587/194727921-cf2cfc41-5b62-4859-b17e-4d1332935c7d.png)
+
 ## Further Contacts:
 `parvez.mak4132@gmail.com`
