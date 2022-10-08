@@ -4,10 +4,10 @@ namespace MatchTables_Test
 {
 	public class MockData
 	{
-		public static string sourceTable1Name = "SourceTable1";
-		public static string sourceTable2Name = "SourceTable2";
-		public static string primaryKey = "socialsecuritynumber";
-		public static List<Dictionary<string, dynamic>> mockSourceRecords =
+		public const string sourceTable1Name = "SourceTable1";
+		public const string sourceTable2Name = "SourceTable2";
+		public const string primaryKey = "socialsecuritynumber";
+		public List<Dictionary<string, dynamic>> MockSourceRecords { get; } =
 			new()
 			{
 				new Dictionary<string, dynamic>
@@ -18,7 +18,7 @@ namespace MatchTables_Test
 					{"Department" , "Sales"}
 				}
 			};
-		public static List<Dictionary<string, dynamic>> mockTargetRecords =
+		public List<Dictionary<string, dynamic>> MockTargetRecords { get; } =
 			new()
 			{
 				new Dictionary<string, dynamic>
@@ -29,5 +29,6 @@ namespace MatchTables_Test
 					{"Department" , "Marketing"}
 				}
 			};
+
 	}
 }

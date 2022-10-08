@@ -1,7 +1,6 @@
 using MatchTables.Repository;
 using NSubstitute;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TablesComparer.Repository;
 using Xunit;

@@ -53,11 +53,11 @@ namespace TablesComparer.Service
 		private static void ValidateInputValuesAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
 			if(string.IsNullOrWhiteSpace(sourceTable1))
-				throw new ArgumentNullException("SourceTable1 is required!");
+				throw new ArgumentException("SourceTable1 is required!");
 			if(string.IsNullOrWhiteSpace(sourceTable2))
-				throw new ArgumentNullException("SourceTable2 is required!");
+				throw new ArgumentException("SourceTable2 is required!");
 			if(string.IsNullOrWhiteSpace(primaryKey))
-				throw new ArgumentNullException("PrimaryKey is required!");
+				throw new ArgumentException("PrimaryKey is required!");
 		}
 
 		private async Task ValidateIdenticalAsync(string sourceTable1, string sourceTable2)

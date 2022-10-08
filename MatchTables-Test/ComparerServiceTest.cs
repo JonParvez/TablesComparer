@@ -1,9 +1,7 @@
 ﻿using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using TablesComparer.Repository;
 using TablesComparer.Service;
@@ -18,7 +16,7 @@ namespace MatchTables_Test
 		{
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
-			mockRepository.GetAddedRecordsAsync(sourceTable1Name, sourceTable2Name, primaryKey).Returns(mockSourceRecords);
+			mockRepository.GetAddedRecordsAsync(sourceTable1Name, sourceTable2Name, primaryKey).Returns(MockSourceRecords);
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
@@ -50,7 +48,7 @@ namespace MatchTables_Test
 		{
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
-			mockRepository.GetRemovedRecordsAsync(sourceTable1Name, sourceTable2Name, primaryKey).Returns(mockSourceRecords);
+			mockRepository.GetRemovedRecordsAsync(sourceTable1Name, sourceTable2Name, primaryKey).Returns(MockSourceRecords);
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
@@ -83,7 +81,7 @@ namespace MatchTables_Test
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
 			mockRepository.GetModifiedRecordsAsync(sourceTable1Name, sourceTable2Name, primaryKey).Returns(new List<Dictionary<string, dynamic>>());
-			mockRepository.GetSpecificRecordsAsync(sourceTable2Name, primaryKey, new List<string>()).Returns(mockTargetRecords);
+			mockRepository.GetSpecificRecordsAsync(sourceTable2Name, primaryKey, new List<string>()).Returns(MockTargetRecords);
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
@@ -101,11 +99,11 @@ namespace MatchTables_Test
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
-			Func<Task> act = async () => await comparerService.ValidateInputsAsync(string.Empty, sourceTable2Name, primaryKey);
+			async Task act() => await comparerService.ValidateInputsAsync(string.Empty, sourceTable2Name, primaryKey);
 
 			//Assert
-			ArgumentException exception = await Assert.ThrowsAsync<ArgumentNullException>(act);
-			Assert.Equal("SourceTable1 is required!", exception.ParamName);
+			ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(act);
+			Assert.Equal("SourceTable1 is required!", exception.Message);
 		}
 
 		[Fact]
@@ -116,11 +114,11 @@ namespace MatchTables_Test
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
-			Func<Task> act = async () => await comparerService.ValidateInputsAsync(sourceTable1Name, sourceTable2Name, string.Empty);
+			async Task act() => await comparerService.ValidateInputsAsync(sourceTable1Name, sourceTable2Name, string.Empty);
 
 			//Assert
-			ArgumentException exception = await Assert.ThrowsAsync<ArgumentNullException>(act);
-			Assert.Equal("PrimaryKey is required!", exception.ParamName);
+			ArgumentException exception = await Assert.ThrowsAsync<ArgumentException>(act);
+			Assert.Equal("PrimaryKey is required!", exception.Message);
 		}
 
 		[Fact]
@@ -133,7 +131,7 @@ namespace MatchTables_Test
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
-			Func<Task> act = async () => await comparerService.ValidateInputsAsync(sourceTable1Name, sourceTable2Name, primaryKey);
+			async Task act() => await comparerService.ValidateInputsAsync(sourceTable1Name, sourceTable2Name, primaryKey);
 
 			//Assert
 			var exception = await Assert.ThrowsAsync<InvalidDataException>(act);
@@ -149,7 +147,7 @@ namespace MatchTables_Test
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
-			Func<Task> act = async () => await comparerService.ValidateInputsAsync(sourceTable1Name, sourceTable2Name, primaryKey);
+			async Task act() => await comparerService.ValidateInputsAsync(sourceTable1Name, sourceTable2Name, primaryKey);
 
 			//Assert
 			var exception = await Assert.ThrowsAsync<InvalidDataException>(act);
