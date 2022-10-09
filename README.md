@@ -60,6 +60,14 @@ Sample unit test output:
 
 ![image](https://user-images.githubusercontent.com/56506587/194745274-a9a28a7f-857c-4e6f-a25c-5ffc4f7f7a0e.png)
 
+## Used Frameworks and Design Patterns and Principles
+* ASP.NET Core 6
+* Repository Pattern
+* Dependency Injection
+* Generic methods
+* Extension methods
+* Unit Tests with mocking (xUnit, NSubstitute)
+
 ## Further Contacts:
 `Md Abdul Kuddus Parvez` 
 
