@@ -22,11 +22,8 @@ To clone the repowitory to your local machine run this command. **(You must have
   }
 }
 ```
-* Execute this two mandatory sql scripts given in the repository
-   1. **mandatoryTableSchema.sql** 
-      * It will create all the required table schema as a replica schema of the assignment
-   2. **mandatoryTableData.sql** 
-      * It will insert some sample records in those two tables
+* Execute this mandatory database script given in `DatabaseScript` folder in the repository (`DatabaseScript\DatabaseSchemaAndSeedDataScript.sql`)
+  * It will create sample tables schema and insert the seed data
 
 ## After Running the Application
 There are **three** ways to provide the required input in the application, You can follow one from these instructed ways:
@@ -37,7 +34,7 @@ Example:
 ```
 -TableName1 : SourceTable1
 -TableName2 : SourceTable2
--PrimaryKey SocialSecurityNumber
+-PrimaryKey : SocialSecurityNumber
 ```
 
 **2. Build the application and go to the application build path (eg: `{YourFolderDirectory}\TablesComparer\MatchTables\bin\Debug\net6.0` and after the console pop up, then put this command**
@@ -57,5 +54,21 @@ To setup the arguments in visual studio:
 
 ![image](https://user-images.githubusercontent.com/56506587/194727921-cf2cfc41-5b62-4859-b17e-4d1332935c7d.png)
 
+## Run Unit Test
+To run unit test cases, go to the `Test Explorer` and run all the tests at once...
+Sample unit test output:
+
+![image](https://user-images.githubusercontent.com/56506587/194745274-a9a28a7f-857c-4e6f-a25c-5ffc4f7f7a0e.png)
+
+## Used Frameworks, Design Patterns and Principles
+* ASP.NET Core 6
+* Repository Pattern
+* Dependency Injection
+* Generic methods
+* Extension methods
+* Unit Tests with mocking (xUnit, NSubstitute)
+
 ## Further Contacts:
-`parvez.mak4132@gmail.com`
+`Md Abdul Kuddus Parvez` 
+
+`Email :` parvez.mak4132@gmail.com
