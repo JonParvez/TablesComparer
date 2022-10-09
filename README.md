@@ -54,5 +54,11 @@ To setup the arguments in visual studio:
 
 ![image](https://user-images.githubusercontent.com/56506587/194727921-cf2cfc41-5b62-4859-b17e-4d1332935c7d.png)
 
+## Run Unit Test
+To run unit test cases, go to the `Test Explorer` and run all the tests at once...
+Sample unit test output:
+
+![image](https://user-images.githubusercontent.com/56506587/194745274-a9a28a7f-857c-4e6f-a25c-5ffc4f7f7a0e.png)
+
 ## Further Contacts:
 `parvez.mak4132@gmail.com`
