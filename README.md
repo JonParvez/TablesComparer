@@ -34,7 +34,7 @@ Example:
 ```
 -TableName1 : SourceTable1
 -TableName2 : SourceTable2
--PrimaryKey SocialSecurityNumber
+-PrimaryKey : SocialSecurityNumber
 ```
 
 **2. Build the application and go to the application build path (eg: `{YourFolderDirectory}\TablesComparer\MatchTables\bin\Debug\net6.0` and after the console pop up, then put this command**
@@ -61,4 +61,4 @@ Sample unit test output:
 ![image](https://user-images.githubusercontent.com/56506587/194745274-a9a28a7f-857c-4e6f-a25c-5ffc4f7f7a0e.png)
 
 ## Further Contacts:
-`parvez.mak4132@gmail.com`
+`Md Abdul Kuddus Parvez` `parvez.mak4132@gmail.com`
