@@ -22,10 +22,10 @@ namespace TablesComparer.Repository
 		/// <returns>Return added records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetAddedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
-			string commandText = $@"SELECT {sourceTable1}.* FROM {sourceTable1}
-									LEFT JOIN {sourceTable2} 
-									ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
-									WHERE {sourceTable2}.{primaryKey} IS NULL";
+			string commandText = $@"SELECT {sourceTable2}.* FROM {sourceTable2}
+										LEFT JOIN {sourceTable1} 
+										ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
+										where {sourceTable1}.{primaryKey} IS NULL";
 			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
@@ -38,10 +38,10 @@ namespace TablesComparer.Repository
 		/// <returns>Return deleted records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetRemovedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
-			string commandText = $@"SELECT {sourceTable2}.* FROM {sourceTable2}
-										LEFT JOIN {sourceTable1} 
-										ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
-										where {sourceTable1}.{primaryKey} IS NULL";
+			string commandText = $@"SELECT {sourceTable1}.* FROM {sourceTable1}
+									LEFT JOIN {sourceTable2} 
+									ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
+									WHERE {sourceTable2}.{primaryKey} IS NULL";
 			return await _baseRepository.GetRecordsAsync(commandText);
 		}
 
