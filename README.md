@@ -61,4 +61,5 @@ Sample unit test output:
 ![image](https://user-images.githubusercontent.com/56506587/194745274-a9a28a7f-857c-4e6f-a25c-5ffc4f7f7a0e.png)
 
 ## Further Contacts:
-`Md Abdul Kuddus Parvez` parvez.mak4132@gmail.com
+`Md Abdul Kuddus Parvez` 
+Email : parvez.mak4132@gmail.com
