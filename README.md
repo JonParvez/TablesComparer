@@ -22,11 +22,8 @@ To clone the repowitory to your local machine run this command. **(You must have
   }
 }
 ```
-* Execute this two mandatory sql scripts given in the repository
-   1. **mandatoryTableSchema.sql** 
-      * It will create all the required table schema as a replica schema of the assignment
-   2. **mandatoryTableData.sql** 
-      * It will insert some sample records in those two tables
+* Execute this mandatory database script given in `DatabaseScript` folder in the repository (`DatabaseScript\DatabaseSchemaAndSeedDataScript.sql`)
+  * It will create sample tables schema and insert the seed data
 
 ## After Running the Application
 There are **three** ways to provide the required input in the application, You can follow one from these instructed ways:
