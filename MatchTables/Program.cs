@@ -32,10 +32,10 @@ try
 	Console.WriteLine("Added Records:");
 	Console.WriteLine(await comparerService.GetAddedRecordsAsStringAsync(sourceTable1, sourceTable2, primaryKey));
 
-	Console.WriteLine("Deleted Records:");
+	Console.WriteLine("Removed Records:");
 	Console.WriteLine(await comparerService.GetDeletedRecordsAsStringAsync(sourceTable1, sourceTable2, primaryKey));
 
-	Console.WriteLine("Modified Records:");
+	Console.WriteLine("Changes:");
 	Console.WriteLine(await comparerService.GetModifiedRecordsAsStringAsync(sourceTable1, sourceTable2, primaryKey));
 
 	#endregion
