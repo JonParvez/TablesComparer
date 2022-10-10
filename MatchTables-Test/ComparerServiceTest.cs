@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using TablesComparer.Repository;
 using TablesComparer.Service;
@@ -12,7 +13,7 @@ namespace MatchTables_Test
 	public class ComparerServiceTest : MockData
 	{
 		[Fact]
-		public async Task GetAddedRecordsAsStringAsync_Should_Return_Records_String()
+		public async Task GetAddedRecordsAsStringAsync_Should_Return_Records_As_Expected_String_Format()
 		{
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
@@ -20,11 +21,12 @@ namespace MatchTables_Test
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
-			var result = await comparerService.GetAddedRecordsAsStringAsync(sourceTable1Name, sourceTable2Name, primaryKey);
+			var actualResult = await comparerService.GetAddedRecordsAsStringAsync(sourceTable1Name, sourceTable2Name, primaryKey);
 
 			//Assert
-			Assert.IsType<string>(result);
-			Assert.NotEmpty(result);
+			Assert.IsType<string>(actualResult);
+			string expectedResult = "   *  01010101 ( Kari Nordmann ) \n";
+			Assert.Equal(expectedResult, actualResult);
 		}
 
 		[Fact]
@@ -44,7 +46,7 @@ namespace MatchTables_Test
 		}
 
 		[Fact]
-		public async Task GetDeletedRecordsAsStringAsync_Should_Return_Records_String()
+		public async Task GetDeletedRecordsAsStringAsync_Should_Return_Records_As_Expected_String_Format()
 		{
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
@@ -52,11 +54,12 @@ namespace MatchTables_Test
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
-			var result = await comparerService.GetDeletedRecordsAsStringAsync(sourceTable1Name, sourceTable2Name, primaryKey);
+			var actualResult = await comparerService.GetDeletedRecordsAsStringAsync(sourceTable1Name, sourceTable2Name, primaryKey);
 
 			//Assert
-			Assert.IsType<string>(result);
-			Assert.NotEmpty(result);
+			Assert.IsType<string>(actualResult);
+			string expectedResult = "   *  01010101 ( Kari Nordmann ) \n";
+			Assert.Equal(expectedResult, actualResult);
 		}
 
 		[Fact]
@@ -64,7 +67,7 @@ namespace MatchTables_Test
 		{
 			//Arrange
 			var mockRepository = Substitute.For<IDataRepository>();
-			mockRepository.GetRemovedRecordsAsync(sourceTable1Name, sourceTable2Name, primaryKey).Returns(new List<Dictionary<string,dynamic>>());
+			mockRepository.GetRemovedRecordsAsync(sourceTable1Name, sourceTable2Name, primaryKey).Returns(new List<Dictionary<string, dynamic>>());
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
@@ -128,7 +131,7 @@ namespace MatchTables_Test
 			var mockRepository = Substitute.For<IDataRepository>();
 			mockRepository.TableExistsAsync(sourceTable1Name).Returns(true);
 			mockRepository.TableExistsAsync(sourceTable2Name).Returns(true);
-			mockRepository.HasColumnAsync(sourceTable1Name, primaryKey).Returns(false);
+			mockRepository.CheckPrimaryKeyAsync(sourceTable1Name, primaryKey).Returns(false);
 			var comparerService = new ComparerService(mockRepository);
 
 			//Act
@@ -136,7 +139,7 @@ namespace MatchTables_Test
 
 			//Assert
 			var exception = await Assert.ThrowsAsync<InvalidDataException>(act);
-			Assert.Equal("Primary key is missing in SourceTable1!", exception.Message);
+			Assert.Equal("Provided primary key is missing in table 'SourceTable1'!", exception.Message);
 		}
 
 		[Fact]
@@ -146,8 +149,8 @@ namespace MatchTables_Test
 			var mockRepository = Substitute.For<IDataRepository>();
 			mockRepository.TableExistsAsync(sourceTable1Name).Returns(true);
 			mockRepository.TableExistsAsync(sourceTable2Name).Returns(true);
-			mockRepository.HasColumnAsync(sourceTable1Name, primaryKey).Returns(true);
-			mockRepository.HasColumnAsync(sourceTable2Name, primaryKey).Returns(true);
+			mockRepository.CheckPrimaryKeyAsync(sourceTable1Name, primaryKey).Returns(true);
+			mockRepository.CheckPrimaryKeyAsync(sourceTable2Name, primaryKey).Returns(true);
 			mockRepository.CheckIdenticalAsync(sourceTable1Name, sourceTable2Name).Returns(false);
 			var comparerService = new ComparerService(mockRepository);
 

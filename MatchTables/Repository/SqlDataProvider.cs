@@ -1,18 +1,17 @@
-﻿using MatchTables.Repository;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace TablesComparer.Repository
 {
 	/// <summary>
-	/// Base Repository For Basic SQL Execution
+	/// Base Class For Basic SQL Execution
 	/// </summary>
-	public class BaseRepository : IBaseRepository
+	public class SqlDataProvider
 	{
 		private readonly IConfiguration _configuration;
 
-		public BaseRepository()
+		public SqlDataProvider()
 		{
 			var builder = new ConfigurationBuilder()
 						.SetBasePath(Directory.GetCurrentDirectory())

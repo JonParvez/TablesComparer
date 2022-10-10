@@ -9,6 +9,7 @@ namespace TablesComparer.Utility.Extensions
 			StringBuilder stringBuilder = new();
 			foreach (var record in records)
 			{
+				stringBuilder.Append($"   *  {record[primaryKey]} ( ");
 				int totalColumnCounter = 0;
 				foreach (var key in record.Keys)
 				{
@@ -18,7 +19,6 @@ namespace TablesComparer.Utility.Extensions
 					}
 					if (key == primaryKey)
 					{
-						stringBuilder.Append($"   *  {record[primaryKey]} ( ");
 						continue;
 					}
 					stringBuilder.Append($"{record[key]} ");
@@ -39,7 +39,7 @@ namespace TablesComparer.Utility.Extensions
 				{
 					if (item.Key != primaryKey && oldRecord[item.Key] != newRecord[item.Key])
 					{
-						stringBuilder.Append($"   *  {oldRecord[primaryKey]} - {item.Key} has changed from '{oldRecord[item.Key]}' to '{newRecord[item.Key]}' \n");
+						stringBuilder.Append($"   *  {oldRecord[primaryKey]} - {item.Key} has been changed from '{oldRecord[item.Key]}' to '{newRecord[item.Key]}' \n");
 					}
 				}
 			}

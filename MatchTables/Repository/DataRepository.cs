@@ -1,18 +1,10 @@
-﻿using MatchTables.Repository;
-
-namespace TablesComparer.Repository
+﻿namespace TablesComparer.Repository
 {
 	/// <summary>
 	/// Data repository for specefic query generation and execution
 	/// </summary>
-	public class DataRepository : IDataRepository
+	public class DataRepository : SqlDataProvider, IDataRepository
 	{
-		private readonly IBaseRepository _baseRepository;
-		public DataRepository(IBaseRepository baseRepository)
-		{
-			_baseRepository = baseRepository;
-		}
-
 		/// <summary>
 		/// Get added records
 		/// </summary>
@@ -22,11 +14,11 @@ namespace TablesComparer.Repository
 		/// <returns>Return added records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetAddedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
-			string commandText = $@"SELECT {sourceTable2}.* FROM {sourceTable2}
-										LEFT JOIN {sourceTable1} 
-										ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
-										where {sourceTable1}.{primaryKey} IS NULL";
-			return await _baseRepository.GetRecordsAsync(commandText);
+			string commandText = $@"SELECT [{sourceTable2}].* FROM [{sourceTable2}]
+										LEFT JOIN [{sourceTable1}] 
+										ON [{sourceTable1}].[{primaryKey}] = [{sourceTable2}].[{primaryKey}]
+										where [{sourceTable1}].[{primaryKey}] IS NULL";
+			return await GetRecordsAsync(commandText);
 		}
 
 		/// <summary>
@@ -38,11 +30,11 @@ namespace TablesComparer.Repository
 		/// <returns>Return deleted records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetRemovedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
-			string commandText = $@"SELECT {sourceTable1}.* FROM {sourceTable1}
-									LEFT JOIN {sourceTable2} 
-									ON {sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}
-									WHERE {sourceTable2}.{primaryKey} IS NULL";
-			return await _baseRepository.GetRecordsAsync(commandText);
+			string commandText = $@"SELECT [{sourceTable1}].* FROM [{sourceTable1}]
+									LEFT JOIN [{sourceTable2}] 
+									ON [{sourceTable1}].[{primaryKey}] = [{sourceTable2}].[{primaryKey}]
+									WHERE [{sourceTable2}].[{primaryKey}] IS NULL";
+			return await GetRecordsAsync(commandText);
 		}
 
 		/// <summary>
@@ -54,13 +46,13 @@ namespace TablesComparer.Repository
 		/// <returns>Return modified records dictionary collection</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetModifiedRecordsAsync(string sourceTable1, string sourceTable2, string primaryKey)
 		{
-			string commandText = $@"(SELECT {sourceTable1}.* FROM {sourceTable1}
-									INNER JOIN {sourceTable2} ON {sourceTable2}.{primaryKey} = {sourceTable1}.{primaryKey})
+			string commandText = $@"(SELECT [{sourceTable1}].* FROM [{sourceTable1}]
+									INNER JOIN [{sourceTable2}] ON [{sourceTable2}].[{primaryKey}] = [{sourceTable1}].[{primaryKey}])
 									EXCEPT
-									(SELECT {sourceTable2}.* FROM {sourceTable1}
-									INNER JOIN {sourceTable2}
-									ON ({sourceTable1}.{primaryKey} = {sourceTable2}.{primaryKey}))";
-			return await _baseRepository.GetRecordsAsync(commandText);
+									(SELECT [{sourceTable2}].* FROM [{sourceTable1}]
+									INNER JOIN [{sourceTable2}]
+									ON ([{sourceTable1}].[{primaryKey}] = [{sourceTable2}].[{primaryKey}]))";
+			return await GetRecordsAsync(commandText);
 		}
 
 		/// <summary>
@@ -72,9 +64,9 @@ namespace TablesComparer.Repository
 		/// <returns>Return selected records</returns>
 		public async Task<IEnumerable<Dictionary<string, dynamic>>> GetSpecificRecordsAsync(string sourceTable, string primaryKeyName, IEnumerable<string> primaryKeys)
 		{
-			string commandText = $@"SELECT {sourceTable}.* FROM {sourceTable}
-									WHERE {sourceTable}.{primaryKeyName} IN ({string.Join(",", primaryKeys)})";
-			return await _baseRepository.GetRecordsAsync(commandText);
+			string commandText = $@"SELECT [{sourceTable}].* FROM [{sourceTable}]
+									WHERE [{sourceTable}].[{primaryKeyName}] IN ({string.Join(",", primaryKeys)})";
+			return await GetRecordsAsync(commandText);
 		}
 
 		/// <summary>
@@ -98,7 +90,7 @@ namespace TablesComparer.Repository
 											THEN CAST(0 AS BIT)
 											ELSE CAST(1 AS BIT) END";
 
-			var isIdentical = await _baseRepository.GetScalarAsync<bool?>(commandText);
+			var isIdentical = await GetScalarAsync<bool?>(commandText);
 			return isIdentical is not null and true;
 		}
 
@@ -108,18 +100,22 @@ namespace TablesComparer.Repository
 		/// <param name="tableName">Table Name</param>
 		/// <param name="columnName">Column Name</param>
 		/// <returns>Return boolean result</returns>
-		public async Task<bool> HasColumnAsync(string tableName, string columnName)
+		public async Task<bool> CheckPrimaryKeyAsync(string tableName, string primaryKey)
 		{
 			string commandText = $@"SELECT CASE 
 										WHEN EXISTS
 										(
-											SELECT Name FROM sys.columns
-											WHERE Name = '{columnName}' AND Object_ID = Object_ID('{tableName}')
+											SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS T  
+											JOIN INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE C  
+											ON C.CONSTRAINT_NAME = T.CONSTRAINT_NAME  
+											WHERE C.TABLE_NAME='{tableName}' COLLATE SQL_Latin1_General_CP1_CS_AS 
+											AND T.CONSTRAINT_TYPE='PRIMARY KEY' 
+											AND C.COLUMN_NAME = '{primaryKey}' COLLATE SQL_Latin1_General_CP1_CS_AS
 										)
 										THEN CAST(1 AS BIT)
 										ELSE CAST(0 AS BIT) END";
-			var hasColumn = await _baseRepository.GetScalarAsync<bool?>(commandText);
-			return hasColumn is not null and true;
+			var hasPrimaryKey = await GetScalarAsync<bool?>(commandText);
+			return hasPrimaryKey is not null and true;
 		}
 
 		/// <summary>
@@ -132,11 +128,12 @@ namespace TablesComparer.Repository
 			string commandText = $@"SELECT CASE 
 										WHEN EXISTS
 										(
-											SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'{tableName}'
+											SELECT * FROM INFORMATION_SCHEMA.TABLES 
+											WHERE TABLE_NAME = N'{tableName}' COLLATE SQL_Latin1_General_CP1_CS_AS
 										)
 										THEN CAST(1 AS BIT)
 										ELSE CAST(0 AS BIT) END";
-			var exists = await _baseRepository.GetScalarAsync<bool?>(commandText);
+			var exists = await GetScalarAsync<bool?>(commandText);
 			return exists is not null and true;
 		}
 	}

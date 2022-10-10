@@ -12,7 +12,7 @@ namespace MatchTables_Test
 			{
 				new Dictionary<string, dynamic>
 				{
-					{"socialsecuritynumber", "01010101"},
+					{"SocialSecurityNumber", "01010101"},
 					{"Firstname" , "Kari"},
 					{"Lastname" , "Nordmann"},
 					{"Department" , "Sales"}
@@ -23,7 +23,7 @@ namespace MatchTables_Test
 			{
 				new Dictionary<string, dynamic>
 				{
-					{"socialsecuritynumber", "01010101"},
+					{"SocialSecurityNumber", "01010101"},
 					{"Firstname" , "Kari"},
 					{"Lastname" , "Nordmann"},
 					{"Department" , "Marketing"}
