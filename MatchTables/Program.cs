@@ -53,7 +53,7 @@ catch (Exception ex)
 	Console.WriteLine(ex.Message + "\nTry Again ... ");
 	Console.ForegroundColor = ConsoleColor.White;
 }
-Console.WriteLine("Insert any key to close the application ...");
+Console.WriteLine("\nInsert any key to close the application ...");
 Console.ReadKey();
 
 #region Private Methods
